@@ -1,24 +1,24 @@
-import tkinter as tk
-from PIL import ImageTk, Image
+from qtpy import QtWidgets, QtGui
+from qtpy.QtCore import Qt, QTimer
 
-class Tagger(tk.Frame):
-    def __init__(self, master):
-        super().__init__(master)
-        self.master = master
+class Tagger(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-        self.master.title("ImageTagger")
-        self.master.geometry("960x540")
-        # self.master.state('zoomed')
+        self.setWindowTitle("ImageTagger")
 
-        self.img = ImageTk.PhotoImage(Image.open("res/loading.png"))
-        self.panel = tk.Label(master, image=self.img, height=20)
-        self.panel.grid(row=0, column=0)
+        self.central_widget = QtWidgets.QWidget(self)
+        self.setCentralWidget(self.central_widget)
 
-        # f = tk.Frame(master, height=32, width=tk.)
-        # f.pack_propagate(0)  # don't shrink
-        # f.pack()
+        self.resize(960, 540)
+        self.center()
 
-        button = tk.Button(self, text="LOL").grid(row=1, column=0)
-        button = tk.Button(self, text="LOL").grid(row=1, column=1)
-
-        # self.pack()
+    def center(self):
+        """
+        centres the window on the active screen
+        """
+        # https://stackoverflow.com/a/55172738/5013267
+        frame_gm = self.frameGeometry()
+        screen = QtWidgets.QApplication.desktop().screenNumber(QtWidgets.QApplication.desktop().cursor().pos())
+        frame_gm.moveCenter(QtWidgets.QApplication.desktop().screenGeometry(screen).center())
+        self.move(frame_gm.topLeft())

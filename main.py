@@ -1,7 +1,10 @@
-import tkinter as tk
+import qtpy
+from qtpy import QtWidgets
 import ui
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    app = ui.Tagger(root)
-    app.mainloop()
+    app = QtWidgets.QApplication([])
+    main_window = ui.Tagger()
+    main_window.show()
+    app.exec_()
+
