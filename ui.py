@@ -9,19 +9,20 @@ class CentralWidget(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
 
-        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored,
-                                            QtWidgets.QSizePolicy.Ignored)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
         self.setSizePolicy(size_policy)
 
         self.image_label = QtWidgets.QLabel(self)
-        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored,
-                                            QtWidgets.QSizePolicy.Ignored)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(1)
         self.image_label.setSizePolicy(size_policy)
-        self.image_label.setPixmap(QtGui.QPixmap("res/loading.png"))
+        self.image_label.setPixmap(QtGui.QPixmap("res/loading.png")
+                                   .scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setContentsMargins(0, 0, 0, 0)
         self.layout.addWidget(self.image_label, 0, Qt.AlignHCenter | Qt.AlignVCenter)
@@ -48,16 +49,3 @@ class Tagger(QtWidgets.QMainWindow):
 
         self.central_widget = CentralWidget(self)
         self.setCentralWidget(self.central_widget)
-
-        self.resize(960, 540)
-        self.center()
-
-    def center(self):
-        """
-        centres the window on the active screen
-        """
-        # https://stackoverflow.com/a/55172738/5013267
-        frame_gm = self.frameGeometry()
-        screen = QtWidgets.QApplication.desktop().screenNumber(QtWidgets.QApplication.desktop().cursor().pos())
-        frame_gm.moveCenter(QtWidgets.QApplication.desktop().screenGeometry(screen).center())
-        self.move(frame_gm.topLeft())
