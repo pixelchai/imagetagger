@@ -8,6 +8,9 @@ class FolderProvider(Provider):
         self.cur_index = 0
 
     def get_next(self):
+        if self.cur_index >= len(self.files):
+            return None
+
         try:
             return os.path.join(self.path, self.files[self.cur_index])
         finally:

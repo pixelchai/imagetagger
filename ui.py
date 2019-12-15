@@ -1,8 +1,8 @@
 import os
 import shutil
+import sys
 
-from qtpy import QtWidgets, QtGui
-from qtpy.QtWidgets import QSizePolicy
+from qtpy import QtWidgets, QtGui, QtCore
 from qtpy.QtCore import Qt
 from providers import Provider
 from functools import partial
@@ -87,6 +87,10 @@ class Tagger(QtWidgets.QMainWindow):
             self.central_widget.button_holder.layout.addWidget(btn)
 
     def load_image(self, path):
+        if path is None:
+            print("done")
+            sys.exit()
+
         self.cur_image = path
         self.central_widget.image_label.setPixmap(
             QtGui.QPixmap(self.cur_image)
