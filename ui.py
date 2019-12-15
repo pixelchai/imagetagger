@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from qtpy import QtWidgets, QtGui
 from qtpy.QtWidgets import QSizePolicy
 from qtpy.QtCore import Qt
@@ -38,9 +41,10 @@ class CentralWidget(QtWidgets.QWidget):
 
 
 class Tagger(QtWidgets.QMainWindow):
-    def __init__(self, provider: Provider, classes=None, copy=True):
+    def __init__(self, provider: Provider, classes=None, copy=True, out_path="out"):
         super().__init__()
 
+        self.out_path = out_path
         self.provider = provider
         self.copy = copy
         if classes is None:
@@ -53,6 +57,14 @@ class Tagger(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self._add_buttons()
+
+        self.cur_image = None
+        self.load_image(provider.get_next())
+
+        # make dirs
+        os.makedirs(out_path, exist_ok=True)
+        for class_ in self.classes:
+            os.makedirs(os.path.join(self.out_path, class_), exist_ok=True)
 
     @staticmethod
     def _get_shortcut(i):
@@ -74,5 +86,19 @@ class Tagger(QtWidgets.QMainWindow):
 
             self.central_widget.button_holder.layout.addWidget(btn)
 
+    def load_image(self, path):
+        self.cur_image = path
+        self.central_widget.image_label.setPixmap(
+            QtGui.QPixmap(self.cur_image)
+            .scaled(500, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+        print("Loaded image: {}".format(path))
+
     def button_clicked(self, i):
-        print(i)
+        path = os.path.join(self.out_path, self.classes[i])
+        if self.copy:
+            shutil.copy2(self.cur_image, path)
+        else:
+            shutil.move(self.cur_image, path)
+
+        self.load_image(self.provider.get_next())
